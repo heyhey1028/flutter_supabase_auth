@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../utils/utils.dart';
 import 'login_page.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -11,8 +13,10 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +40,19 @@ class _SignUpPageState extends State<SignUpPage> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _userNameController,
+                keyboardType: TextInputType.name,
+                decoration: const InputDecoration(
+                  labelText: 'User Name',
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your user name';
                   }
                   return null;
                 },
@@ -72,10 +89,11 @@ class _SignUpPageState extends State<SignUpPage> {
               const SizedBox(height: 24.0), // Spacer(
 
               ElevatedButton(
-                child: const Text('Signup'),
-                onPressed: () {
+                child: isLoading ? const CircularProgressIndicator() : const Text('Signup'),
+                onPressed: () async {
+                  if (isLoading) return;
                   if (_formKey.currentState!.validate()) {
-                    // Add signup functionality here
+                    await _signUp(context);
                   }
                 },
               ),
@@ -93,5 +111,31 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _signUp(BuildContext context) async {
+    setState(() {
+      isLoading = true;
+    });
+    final email = _emailController.text;
+    final userName = _userNameController.text;
+    final password = _passwordController.text;
+    try {
+      //
+
+      await Supabase.instance.client.auth.signUp(
+        email: email,
+        password: password,
+        data: {'username': userName},
+      );
+      if (!mounted) return;
+      Navigator.of(context).pop();
+    } on AuthException catch (error) {
+      showErrorSnackBar(context, message: error.message);
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 }
