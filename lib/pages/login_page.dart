@@ -23,6 +23,7 @@ class _LoginPageState extends State<LoginPage> {
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
             children: <Widget>[
               TextFormField(
@@ -51,6 +52,7 @@ class _LoginPageState extends State<LoginPage> {
                   return null;
                 },
               ),
+              const SizedBox(height: 24.0), // Spacer(
               ElevatedButton(
                 child: const Text('Login'),
                 onPressed: () {
@@ -62,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
               TextButton(
                 child: const Text('Go to Signup'),
                 onPressed: () {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => const SignUpPage()),
                   );
