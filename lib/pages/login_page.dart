@@ -1,4 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:flutter_supabase_auth/utils/utils.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'sign_up_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -12,6 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +59,13 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 24.0), // Spacer(
               ElevatedButton(
-                child: const Text('Login'),
+                child: isLoading ? const CircularProgressIndicator() : const Text('Login'),
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    // Add login functionality here
+                    _loginWithPassword(
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                    );
                   }
                 },
               ),
@@ -66,7 +74,9 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const SignUpPage()),
+                    MaterialPageRoute(
+                      builder: (context) => const SignUpPage(),
+                    ),
                   );
                 },
               ),
@@ -75,5 +85,28 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _loginWithPassword({
+    required String email,
+    required String password,
+  }) async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      final response = await Supabase.instance.client.auth.signInWithPassword(email: email, password: password);
+      if (response.user != null) {
+        Navigator.of(context).pop();
+      }
+    } on AuthException catch (error) {
+      showErrorSnackBar(context, message: error.message);
+    } on Exception catch (e) {
+      showErrorSnackBar(context, message: e.toString());
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 }
