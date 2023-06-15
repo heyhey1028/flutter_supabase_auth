@@ -132,6 +132,8 @@ class _SignUpPageState extends State<SignUpPage> {
       Navigator.of(context).pop();
     } on AuthException catch (error) {
       showErrorSnackBar(context, message: error.message);
+    } on Exception catch (error) {
+      showErrorSnackBar(context, message: error.toString());
     } finally {
       setState(() {
         isLoading = false;
