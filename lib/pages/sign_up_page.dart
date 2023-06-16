@@ -93,7 +93,13 @@ class _SignUpPageState extends State<SignUpPage> {
                 onPressed: () async {
                   if (isLoading) return;
                   if (_formKey.currentState!.validate()) {
-                    await _signUp(context);
+                    await _signUp(
+                      email: _emailController.text,
+                      userName: _userNameController.text,
+                      password: _passwordController.text,
+                    );
+                    if (!mounted) return;
+                    Navigator.of(context).pop();
                   }
                 },
               ),
@@ -113,21 +119,20 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Future<void> _signUp(BuildContext context) async {
+  Future<void> _signUp({
+    required String email,
+    required String userName,
+    required String password,
+  }) async {
     setState(() {
       isLoading = true;
     });
-    final email = _emailController.text;
-    final userName = _userNameController.text;
-    final password = _passwordController.text;
     try {
       await Supabase.instance.client.auth.signUp(
         email: email,
         password: password,
         data: {'username': userName},
       );
-      if (!mounted) return;
-      Navigator.of(context).pop();
     } on AuthException catch (error) {
       showErrorSnackBar(context, message: error.message);
     } on Exception catch (error) {

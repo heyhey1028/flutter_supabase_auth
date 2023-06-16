@@ -63,12 +63,16 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 12.0),
               ElevatedButton(
                 child: isLoading ? const CircularProgressIndicator() : const Text('Login'),
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    _loginWithPassword(
+                    final response = await _loginWithPassword(
                       email: _emailController.text,
                       password: _passwordController.text,
                     );
+                    if (response == null || response.user == null) {
+                      return;
+                    }
+                    Navigator.of(context).pop();
                   }
                 },
               ),
@@ -90,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<void> _loginWithPassword({
+  Future<AuthResponse?> _loginWithPassword({
     required String email,
     required String password,
   }) async {
@@ -98,10 +102,10 @@ class _LoginPageState extends State<LoginPage> {
       isLoading = true;
     });
     try {
-      final response = await Supabase.instance.client.auth.signInWithPassword(email: email, password: password);
-      if (response.user != null) {
-        Navigator.of(context).pop();
-      }
+      return await Supabase.instance.client.auth.signInWithPassword(
+        email: email,
+        password: password,
+      );
     } on AuthException catch (error) {
       showErrorSnackBar(context, message: error.message);
     } on Exception catch (e) {
@@ -111,6 +115,7 @@ class _LoginPageState extends State<LoginPage> {
         isLoading = false;
       });
     }
+    return null;
   }
 }
 
@@ -128,7 +133,7 @@ class SocialLogins extends StatelessWidget {
           mini: true,
           onTap: () async {
             try {
-              final response = Supabase.instance.client.auth;
+              // final response = Supabase.instance.client.auth;
               // if (response.user != null) {
               //   Navigator.of(context).pop();
               // }
