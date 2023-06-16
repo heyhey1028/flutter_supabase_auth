@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter_social_button/flutter_social_button.dart';
 import 'package:flutter_supabase_auth/utils/utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'sign_up_page.dart';
@@ -57,7 +58,9 @@ class _LoginPageState extends State<LoginPage> {
                   return null;
                 },
               ),
-              const SizedBox(height: 24.0), // Spacer(
+              const SizedBox(height: 24.0),
+              const SocialLogins(),
+              const SizedBox(height: 12.0),
               ElevatedButton(
                 child: isLoading ? const CircularProgressIndicator() : const Text('Login'),
                 onPressed: () {
@@ -108,5 +111,71 @@ class _LoginPageState extends State<LoginPage> {
         isLoading = false;
       });
     }
+  }
+}
+
+class SocialLogins extends StatelessWidget {
+  const SocialLogins({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        // google login
+        FlutterSocialButton(
+          buttonType: ButtonType.google,
+          mini: true,
+          onTap: () async {
+            try {
+              final response = Supabase.instance.client.auth;
+              // if (response.user != null) {
+              //   Navigator.of(context).pop();
+              // }
+            } on AuthException catch (error) {
+              showErrorSnackBar(context, message: error.message);
+            } on Exception catch (e) {
+              showErrorSnackBar(context, message: e.toString());
+            }
+          },
+        ),
+        const SizedBox(width: 16.0),
+        // github login
+        FlutterSocialButton(
+          buttonType: ButtonType.github,
+          mini: true,
+          onTap: () async {
+            try {
+              // final response = await Supabase.instance.client.auth.signIn(provider: Provider.github);
+              // if (response.user != null) {
+              //   Navigator.of(context).pop();
+              // }
+            } on AuthException catch (error) {
+              showErrorSnackBar(context, message: error.message);
+            } on Exception catch (e) {
+              showErrorSnackBar(context, message: e.toString());
+            }
+          },
+        ),
+        const SizedBox(width: 16.0),
+        // twitter login
+        FlutterSocialButton(
+          buttonType: ButtonType.twitter,
+          mini: true,
+          onTap: () async {
+            try {
+              // final response = await Supabase.instance.client.auth.signIn(provider: Provider.twitter);
+              // if (response.user != null) {
+              //   Navigator.of(context).pop();
+              // }
+            } on AuthException catch (error) {
+              showErrorSnackBar(context, message: error.message);
+            } on Exception catch (e) {
+              showErrorSnackBar(context, message: e.toString());
+            }
+          },
+        ),
+      ],
+    );
   }
 }
