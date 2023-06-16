@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -18,10 +20,10 @@ class _MyHomePageState extends State<MyHomePage> {
   String userName = '';
   bool isLoggedIn = false;
   bool isLoading = false;
+  late StreamSubscription<AuthState> _authStateChangesSubscription;
 
-  @override
-  void initState() {
-    Supabase.instance.client.auth.onAuthStateChange.listen((state) {
+  StreamSubscription<AuthState> getAuthStateSubscription() {
+    return Supabase.instance.client.auth.onAuthStateChange.listen((state) {
       if (state.event == AuthChangeEvent.signedIn) {
         final userData = Supabase.instance.client.auth.currentUser!;
 
@@ -38,7 +40,18 @@ class _MyHomePageState extends State<MyHomePage> {
         });
       }
     });
+  }
+
+  @override
+  void initState() {
+    _authStateChangesSubscription = getAuthStateSubscription();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _authStateChangesSubscription.cancel();
+    super.dispose();
   }
 
   @override
