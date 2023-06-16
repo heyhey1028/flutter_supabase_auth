@@ -121,8 +121,6 @@ class _SignUpPageState extends State<SignUpPage> {
     final userName = _userNameController.text;
     final password = _passwordController.text;
     try {
-      //
-
       await Supabase.instance.client.auth.signUp(
         email: email,
         password: password,
