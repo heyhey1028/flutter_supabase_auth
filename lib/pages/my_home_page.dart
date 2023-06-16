@@ -25,7 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
   StreamSubscription<AuthState> getAuthStateSubscription() {
     return Supabase.instance.client.auth.onAuthStateChange.listen((state) {
       if (state.event == AuthChangeEvent.signedIn) {
-        final userData = Supabase.instance.client.auth.currentUser!;
+        final userData = state.session!.user;
 
         setState(() {
           isLoggedIn = true;
