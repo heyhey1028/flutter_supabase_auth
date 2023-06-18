@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_social_button/flutter_social_button.dart';
 import 'package:flutter_supabase_auth/utils/utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../repositories/secure_storage_repositor.dart';
 import 'sign_up_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -62,7 +64,9 @@ class _LoginPageState extends State<LoginPage> {
               const SocialLogins(),
               const SizedBox(height: 12.0),
               ElevatedButton(
-                child: isLoading ? const CircularProgressIndicator() : const Text('Login'),
+                child: isLoading
+                    ? const CircularProgressIndicator()
+                    : const Text('Login'),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     final response = await _loginWithPassword(
@@ -72,6 +76,9 @@ class _LoginPageState extends State<LoginPage> {
                     if (response == null || response.user == null) {
                       return;
                     }
+                    print('access token:${response.session?.accessToken}');
+                    await SecureStorageRepository.setAccessToken(
+                        response.session?.accessToken ?? '');
                     Navigator.of(context).pop();
                   }
                 },

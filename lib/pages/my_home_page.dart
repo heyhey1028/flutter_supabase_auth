@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_supabase_auth/repositories/secure_storage_repositor.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../utils/utils.dart';
@@ -79,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: isLoggedIn
           ? FloatingActionButton.extended(
-              onPressed: () => _logout(),
+              onPressed: () => callOutAccessToken(),
               label: const Text('Logout'),
             )
           : FloatingActionButton.extended(
@@ -93,6 +94,12 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               label: const Text('Login'),
             ),
+    );
+  }
+
+  Future<void> callOutAccessToken() async {
+    await SecureStorageRepository.getAccessToken().then(
+      (value) => print('get access token $value'),
     );
   }
 
