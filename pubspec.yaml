@@ -1,15 +1,12 @@
 name: flutter_supabase_auth
 description: A new Flutter project.
 
-
-publish_to: 'none' 
-
+publish_to: "none"
 
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.2 <4.0.0'
-
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -17,17 +14,12 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_social_button: any
   supabase_flutter: ^1.10.3
+  flutter_secure_storage: ^8.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
 
-
 flutter:
-
-  
-  
-  
   uses-material-design: true
-
