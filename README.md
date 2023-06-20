@@ -1,6 +1,20 @@
 # flutter_supabase_auth
 This is a sample project for using `Supabase Authentication` with Flutter.
 
+# Getting started
+To get started, Please create your own Supabase project and provide `project url` and `anonKey` to main methods.
+```dart
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();  
+  await Supabase.initialize( 
+    url: 'https://<your_project_id>.supabase.co', // add
+    anonKey: '<your_anon_key>', // add
+  );
+  runApp(const MyApp());
+}
+```
+
+
 # What is Supabase?
 
 Supabase is an open source mBaaS intended alternate Firebase. It features a RelationalDataBase (RDB) based on **Postgres** and also offers a variety of features that are comparable to Firebase, including real-time updates, authentication, storage, and serverless functions.
