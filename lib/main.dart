@@ -4,10 +4,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'pages/my_home_page.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized(); // ensure flutter framework is initialized
   await Supabase.initialize(
-    url: 'https://uvaqnjsyudgxpdjolimd.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2YXFuanN5dWRneHBkam9saW1kIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODY2OTYwNjQsImV4cCI6MjAwMjI3MjA2NH0.-HhQc_Iz7PUyZgOGcZc09ebtxhvug_yFhLDYhECHd4k',
+    url: 'https://<your_project_id>.supabase.co', // provide your project url here
+    anonKey: '<your_anon_key>', // provide your anon key here
   );
   runApp(const MyApp());
 }

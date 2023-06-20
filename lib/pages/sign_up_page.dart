@@ -124,9 +124,12 @@ class _SignUpPageState extends State<SignUpPage> {
     required String userName,
     required String password,
   }) async {
+    // Set loading state to true
     setState(() {
       isLoading = true;
     });
+
+    // Try to sign up with Supabase
     try {
       await Supabase.instance.client.auth.signUp(
         email: email,
@@ -134,10 +137,13 @@ class _SignUpPageState extends State<SignUpPage> {
         data: {'username': userName},
       );
     } on AuthException catch (error) {
+      // Catch any errors with signing up
       showErrorSnackBar(context, message: error.message);
     } on Exception catch (error) {
+      // Catch any other errors
       showErrorSnackBar(context, message: error.toString());
     } finally {
+      // Set loading state to false
       setState(() {
         isLoading = false;
       });

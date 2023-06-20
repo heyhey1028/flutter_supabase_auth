@@ -22,16 +22,19 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isLoading = false;
   late StreamSubscription<AuthState> _authStateChangesSubscription;
 
+  // Create a function that returns a StreamSubscription of AuthState
   StreamSubscription<AuthState> getAuthStateSubscription() {
+    // Listen to the onAuthStateChange stream and return the state
     return Supabase.instance.client.auth.onAuthStateChange.listen((state) {
+      // If the user is signed in, update the state with their details
       if (state.event == AuthChangeEvent.signedIn) {
         final userData = state.session!.user;
-
         setState(() {
           isLoggedIn = true;
           userID = userData.id;
           userName = userData.userMetadata!['username'];
         });
+        // If the user is signed out, reset the state
       } else if (state.event == AuthChangeEvent.signedOut) {
         setState(() {
           isLoggedIn = false;
@@ -96,6 +99,11 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  /// Logs out the current user.
+  ///
+  /// If the logout process fails, the user is shown a snackbar with the error.
+  ///
+  /// If the logout process succeeds, the user is taken to the login screen.
   Future<void> _logout() async {
     setState(() {
       isLoading = true;
