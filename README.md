@@ -1,6 +1,9 @@
 # flutter_supabase_auth
 This is a sample project for using `Supabase Authentication` with Flutter.
 
+![CleanShot 2023-06-20 at 09 53 41](https://github.com/heyhey1028/flutter_supabase_auth/assets/44666053/25664c67-ca91-466b-a103-385902a789a7)
+
+
 # Getting started
 To get started, Please create your own Supabase project and provide `project url` and `anonKey` to main methods.
 ```dart
