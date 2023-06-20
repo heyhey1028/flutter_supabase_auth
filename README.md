@@ -123,3 +123,56 @@ class AuthResponse {
         user = User.fromJson(json) ?? Session.fromJson(json)?.user;
 }
 ```
+
+ ## Getting Signin User
+You can get current `User` through `Supabase.instance.client.auth.currentUser` getter. If user is not signed in, `null` will be returned.
+
+ ```dart
+final User? user = Supabase.instance.client.auth.currentUser;
+```
+
+## Listening to UserState
+You can listen to AuthState change through `Supabase.instance.client.auth.onAuthStateChange` which returns a Stream for AuthState.
+
+ `AuthState` contains `AuthStateChange` class and `Session` class. If you want to listen to User class according to `AuthStateChange`, you can receive it from `Session` class.
+
+```dart
+  listenAuthStateChange() {
+     // Listen to AuthState stream
+     Supabase.instance.client.auth.onAuthStateChange.listen((AuthState state) {
+      if (state.event == AuthChangeEvent.signedIn) {
+        // action on signed in
+        final userData = state.session!.user; // get User through Session class
+        ...
+      } else if (state.event == AuthChangeEvent.signedOut) {
+        // action on signed out
+        ...
+      }
+    });
+  }
+```
+
+## Getting User information
+You can access user information as in below.
+
+if you want to access information within metada, you can access them by `User.userMetadata[<key>]`
+
+```dart
+final userID = user.id; 
+final email = user.email;
+final userName = user.userMetadata!['username']; // access metadata with userMetadata[<key>]
+```
+
+## SignOut
+You can simply signout with **`Supabase.instance.client.auth.signOut()`** 
+
+```dart
+  Future<void> _logout() async {
+    try {
+      await Supabase.instance.client.auth.signOut();
+    } on AuthException catch (error) {
+      ...
+    } on Exception catch (error) {
+      ...
+    }
+  }
